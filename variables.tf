@@ -110,10 +110,6 @@ variable "retention_daily_count" {
   default     = 10
 }
 
-variable "recovery_services_vault_sku" {
-  type        = string
-  description = "(optional) describe your variable"
-}
 
 variable "nsg_rules" {
   type = map(object({
@@ -132,7 +128,7 @@ variable "nsg_rules" {
       access                     = "Allow"
       destination_address_prefix = "*"
       destination_port_range     = "443"
-      direction                  = "Outbound"
+      direction                  = "Inbound"
       name                       = "allow-https"
       priority                   = 100
       protocol                   = "Tcp"
