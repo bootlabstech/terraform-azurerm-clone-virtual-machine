@@ -73,6 +73,12 @@ resource "azurerm_network_security_group" "nsg" {
   name                = "${var.name}-nsg"
   location            = azurerm_virtual_machine.vm.location
   resource_group_name = azurerm_virtual_machine.vm.resource_group_name
+    lifecycle {
+    ignore_changes = [
+      tags,
+    ]
+  }
+
 }
 
 resource "azurerm_network_security_rule" "nsg_rules" {
