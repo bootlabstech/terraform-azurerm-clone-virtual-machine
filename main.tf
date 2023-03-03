@@ -88,11 +88,6 @@ resource "azurerm_network_security_rule" "nsg_rules" {
   destination_port_range      = each.value.destination_port_range
   network_security_group_name = azurerm_network_security_group.nsg.name
   resource_group_name         = azurerm_virtual_machine.vm.resource_group_name
-  lifecycle {
-    ignore_changes = [
-      tags,
-    ]
-  }
 }
 
 resource "azurerm_network_interface_security_group_association" "security_group_association" {
@@ -148,11 +143,6 @@ resource "azurerm_lb_backend_address_pool" "backend_pool" {
   depends_on = [
     azurerm_lb.lb
   ]
-  lifecycle {
-    ignore_changes = [
-      tags,
-    ]
-  }
 }
 
 
