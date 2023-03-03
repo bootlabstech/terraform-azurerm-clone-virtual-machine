@@ -43,15 +43,14 @@ resource "azurerm_virtual_machine" "vm" {
       provision_vm_agent = true
     }
   }
-
+  depends_on = [
+    azurerm_network_interface.nic
+  ]
   lifecycle {
     ignore_changes = [
       tags,
     ]
   }
-  depends_on = [
-    azurerm_network_interface.nic
-  ]
 }
 
 resource "azurerm_network_interface" "nic" {
@@ -62,6 +61,11 @@ resource "azurerm_network_interface" "nic" {
     name                          = "${var.name}-ip"
     subnet_id                     = var.subnet_id
     private_ip_address_allocation = var.private_ip_address_allocation
+  }
+  lifecycle {
+    ignore_changes = [
+      tags,
+    ]
   }
 }
 
@@ -84,6 +88,11 @@ resource "azurerm_network_security_rule" "nsg_rules" {
   destination_port_range      = each.value.destination_port_range
   network_security_group_name = azurerm_network_security_group.nsg.name
   resource_group_name         = azurerm_virtual_machine.vm.resource_group_name
+  lifecycle {
+    ignore_changes = [
+      tags,
+    ]
+  }
 }
 
 resource "azurerm_network_interface_security_group_association" "security_group_association" {
@@ -105,6 +114,11 @@ resource "azurerm_public_ip" "public_ip" {
   sku                 = var.public_ip_sku
   sku_tier            = var.public_ip_sku_tier
   allocation_method   = var.allocation_method
+  lifecycle {
+    ignore_changes = [
+      tags,
+    ]
+  }
 }
 
 resource "azurerm_lb" "lb" {
@@ -120,8 +134,12 @@ resource "azurerm_lb" "lb" {
   depends_on = [
     azurerm_public_ip.public_ip,
     azurerm_virtual_machine.vm
-
   ]
+  lifecycle {
+    ignore_changes = [
+      tags,
+    ]
+  }
 }
 
 resource "azurerm_lb_backend_address_pool" "backend_pool" {
@@ -130,6 +148,11 @@ resource "azurerm_lb_backend_address_pool" "backend_pool" {
   depends_on = [
     azurerm_lb.lb
   ]
+  lifecycle {
+    ignore_changes = [
+      tags,
+    ]
+  }
 }
 
 
@@ -149,6 +172,7 @@ resource "azurerm_lb_probe" "lb_probe" {
   loadbalancer_id = azurerm_lb.lb.id
   name            = "https"
   port            = var.probe_ports
+
 }
 
 resource "azurerm_lb_rule" "lb_rule" {
