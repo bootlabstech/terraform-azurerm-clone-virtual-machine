@@ -55,7 +55,7 @@ variable "caching" {
 variable "create_option" {
   type        = string
   description = "Specifies how the data {{.name}} should be created. Possible values are Attach, FromImage and Empty."
-  # default     = "Attach"
+  default     = "Attach"
 }
 
 variable "managed_disk_type" {
