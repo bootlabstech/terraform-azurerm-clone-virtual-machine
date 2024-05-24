@@ -72,10 +72,10 @@ variable "os_type" {
 }
 
 # # os_profile
-# variable "admin_username" {
-#   type        = string
-#   description = "Specifies the name of the local administrator account."
-# }
+variable "diskname" {
+  type        = string
+  description = "Specifies the name of the local administrator account."
+}
 
 # variable "admin_password" {
 #   type        = string
