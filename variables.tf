@@ -106,11 +106,11 @@ variable "managed_disk_id" {
 #   default = "Dynamic"
 # }
 
-variable "disable_password_authentication" {
-  type        = bool
-  description = "Specifies whether password authentication should be disabled. If set to false, an admin_password must be specified."
-  default     = false
-}
+# variable "disable_password_authentication" {
+#   type        = bool
+#   description = "Specifies whether password authentication should be disabled. If set to false, an admin_password must be specified."
+#   default     = false
+# }
 
 variable "timezone" {
   type        = string
