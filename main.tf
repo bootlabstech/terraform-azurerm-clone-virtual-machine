@@ -19,7 +19,7 @@ resource "azurerm_virtual_machine" "virtual_machine" {
    }
 
   storage_os_disk {
-    name              = "${var.name}"
+    name              = var.diskname
     caching           = var.caching
     create_option     = var.create_option
     managed_disk_type = var.managed_disk_type

@@ -13,6 +13,10 @@ variable "location" {
   type        = string
   description = "location of the resource group"
 }
+variable "diskname" {
+  type        = string
+  
+}
 
 
 
