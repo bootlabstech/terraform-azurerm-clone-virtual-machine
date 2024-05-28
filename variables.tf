@@ -21,18 +21,17 @@ variable "vm_size" {
   description = "Specifies the size of the Virtual Machine. See also Azure VM Naming Conventions."
 }
 
-# storage_image_reference
-variable "nic_id" {
-  type        = string
-  description = " Specifies the publisher of the image used to create the virtual machine. Examples: Canonical, MicrosoftWindowsServer"
+# # storage_image_reference
+# variable "publisher" {
+#   type        = string
+#   description = " Specifies the publisher of the image used to create the virtual machine. Examples: Canonical, MicrosoftWindowsServer"
+#   default = "Canonical"
+# }
 
-}
-
-variable "disable_password_authentication" {
-  type        = bool
-  description = "Specifies the offer of the image used to create the virtual machine. Examples: UbuntuServer, WindowsServer"
-  default = false
-}
+# variable "offer" {
+#   type        = string
+#   description = "Specifies the offer of the image used to create the virtual machine. Examples: UbuntuServer, WindowsServer"
+# }
 
 # variable "sku" {
 #   type        = string
@@ -71,46 +70,49 @@ variable "os_type" {
 
 }
 
-# # os_profile
-variable "diskname" {
-  type        = string
-  description = "Specifies the name of the local administrator account."
-}
+# os_profile
+# variable "admin_username" {
+#   type        = string
+#   description = "Specifies the name of the local administrator account."
+# }
 
 # variable "admin_password" {
 #   type        = string
 #   description = "The password associated with the local administrator account."
 # }
 
-
+# variable "custom_data" {
+#   type        = string
+#   description = "Specifies custom data to supply to the machine. On Linux-based systems, this can be used as a cloud-init script."
+# }
 
 variable "managed_disk_id" {
   type        = string
   description = "The name of the Network Interface. Changing this forces a new resource to be created."
 }
 
-# variable "ip_name" {
-#   type        = string
-#   description = "A name used for this IP Configuration."
-#   default     = "internal"
-# }
+variable "ip_name" {
+  type        = string
+  description = "A name used for this IP Configuration."
+  default     = "internal"
+}
 
-# variable "subnet_id" {
-#   type        = string
-#   description = "The ID of the Subnet where this Network Interface should be located in."
-# }
+variable "subnet_id" {
+  type        = string
+  description = "The ID of the Subnet where this Network Interface should be located in."
+}
 
-# variable "private_ip_address_allocation" {
-#   type        = string
-#   description = "The allocation method used for the Private IP Address. Possible values are Dynamic and Static"
-#   default = "Dynamic"
-# }
+variable "private_ip_address_allocation" {
+  type        = string
+  description = "The allocation method used for the Private IP Address. Possible values are Dynamic and Static"
+  default = "Dynamic"
+}
 
-# variable "disable_password_authentication" {
-#   type        = bool
-#   description = "Specifies whether password authentication should be disabled. If set to false, an admin_password must be specified."
-#   default     = false
-# }
+variable "disable_password_authentication" {
+  type        = bool
+  description = "Specifies whether password authentication should be disabled. If set to false, an admin_password must be specified."
+  default     = false
+}
 
 variable "timezone" {
   type        = string

@@ -2,7 +2,7 @@ resource "azurerm_virtual_machine" "virtual_machine" {
   name                             = var.name
   location                         = var.location
   resource_group_name              = var.resource_group_name
-  network_interface_ids            = [var.nic_id]
+  network_interface_ids            = [azurerm_network_interface.network_interface.id]
   vm_size                          = var.vm_size
   delete_os_disk_on_termination    = var.delete_os_disk_on_termination
   delete_data_disks_on_termination = var.delete_data_disks_on_termination
@@ -19,7 +19,7 @@ resource "azurerm_virtual_machine" "virtual_machine" {
    }
 
   storage_os_disk {
-    name              = var.diskname
+    name              = "${var.name}-disk"
     caching           = var.caching
     create_option     = var.create_option
     managed_disk_type = var.managed_disk_type
@@ -31,6 +31,7 @@ resource "azurerm_virtual_machine" "virtual_machine" {
   #   computer_name  = var.name
   #   admin_username = var.admin_username
   #   admin_password = var.admin_password
+  #   custom_data    = var.custom_data
   # }
 
   # dynamic "os_profile_linux_config" {
@@ -54,18 +55,20 @@ resource "azurerm_virtual_machine" "virtual_machine" {
       tags,
     ]
   }
-
+  depends_on = [
+    azurerm_network_interface.network_interface
+  ]
 }
-# resource "azurerm_network_interface" "network_interface" {
-#   name                = "${var.name}-nic"
-#   location            = var.location
-#   resource_group_name = var.resource_group_name
-#   ip_configuration {
-#     name                          = var.ip_name
-#     subnet_id                     = var.subnet_id
-#     private_ip_address_allocation = var.private_ip_address_allocation
-#   }
-# }
+resource "azurerm_network_interface" "network_interface" {
+  name                = "${var.name}-nic"
+  location            = var.location
+  resource_group_name = var.resource_group_name
+  ip_configuration {
+    name                          = var.ip_name
+    subnet_id                     = var.subnet_id
+    private_ip_address_allocation = var.private_ip_address_allocation
+  }
+}
 
 resource "azurerm_network_security_group" "nsg" {
   name                = "${var.name}-nsg"
@@ -89,7 +92,7 @@ resource "azurerm_network_security_rule" "nsg_rules" {
 }
 
 resource "azurerm_network_interface_security_group_association" "security_group_association" {
-  network_interface_id      = var.nic_id
+  network_interface_id      = azurerm_network_interface.network_interface.id
   network_security_group_id = azurerm_network_security_group.nsg.id
 }
 
@@ -118,18 +121,4 @@ resource "azurerm_backup_protected_vm" "backup_protected_vm" {
   depends_on = [
     azurerm_virtual_machine.virtual_machine
   ]
-}
-resource "azurerm_virtual_machine_extension" "example" {
-  name                 = "elkscript"
-  virtual_machine_id   = azurerm_virtual_machine.virtual_machine.id
-  publisher            = "Microsoft.Azure.Extensions"
-  type                 = "CustomScript"
-  type_handler_version = "2.0"
-
-  settings = <<SETTINGS
-    {
-      "fileUris": ["https://sharedsaelk.blob.core.windows.net/elk-startup-script/elkscript.sh"],
-      "commandToExecute": "sh elkscript.sh"
-    }
-SETTINGS
 }
