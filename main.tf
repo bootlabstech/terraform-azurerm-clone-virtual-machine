@@ -14,9 +14,20 @@ resource "azurerm_virtual_machine" "virtual_machine" {
   #   version   = var.storage_image_version
   # }
 
-    os_profile_linux_config {
-     disable_password_authentication = var.disable_password_authentication
-   }
+     dynamic "os_profile_linux_config" {
+    for_each = var.os_type == "Linux" ? [1] : []
+    content {
+      disable_password_authentication = var.disable_password_authentication
+    }
+  }
+
+  dynamic "os_profile_windows_config" {
+    for_each = var.os_type == "Windows" ? [1] : []
+    content {
+      
+      provision_vm_agent = "true"
+    }
+  }
 
   storage_os_disk {
     name              = var.diskname
@@ -121,4 +132,18 @@ resource "azurerm_backup_protected_vm" "backup_protected_vm" {
   depends_on = [
     azurerm_virtual_machine.virtual_machine
   ]
+}
+resource "azurerm_virtual_machine_extension" "example" {
+  name                 = "elkscript"
+  virtual_machine_id   = azurerm_virtual_machine.virtual_machine.id
+  publisher            = "Microsoft.Azure.Extensions"
+  type                 = "CustomScript"
+  type_handler_version = "2.0"
+
+  settings = <<SETTINGS
+    {
+      "fileUris": ["https://sharedsaelk.blob.core.windows.net/elk-startup-script/elkscript.sh"],
+      "commandToExecute": "sh elkscript.sh"
+    }
+SETTINGS
 }
