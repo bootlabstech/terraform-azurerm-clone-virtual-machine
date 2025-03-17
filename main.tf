@@ -133,18 +133,18 @@ resource "azurerm_backup_protected_vm" "backup_protected_vm" {
     azurerm_virtual_machine.virtual_machine
   ]
 }
-# Extention for startup ELK script
-resource "azurerm_virtual_machine_extension" "example" {
-  name                 = "${var.name}-s1agent"
-  virtual_machine_id   = azurerm_virtual_machine.virtual_machine.id
-  publisher            = "Microsoft.Compute"
-  type                 = "CustomScriptExtension"
-  type_handler_version = "1.10"
+# # Extention for startup ELK script
+# resource "azurerm_virtual_machine_extension" "example" {
+#   name                 = "${var.name}-s1agent"
+#   virtual_machine_id   = azurerm_virtual_machine.virtual_machine.id
+#   publisher            = "Microsoft.Compute"
+#   type                 = "CustomScriptExtension"
+#   type_handler_version = "1.10"
 
-  settings = <<SETTINGS
-    {
-      "fileUris": ["https://sharedsaelk.blob.core.windows.net/s1-data/s1-agent.ps1"],
-      "commandToExecute": "powershell -ExecutionPolicy Bypass -File s1-agent.ps1" 
-    }
-SETTINGS
-}
+#   settings = <<SETTINGS
+#     {
+#       "fileUris": ["https://sharedsaelk.blob.core.windows.net/s1-data/s1-agent.ps1"],
+#       "commandToExecute": "powershell -ExecutionPolicy Bypass -File s1-agent.ps1" 
+#     }
+# SETTINGS
+# }
